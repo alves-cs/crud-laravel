@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:14.2-alpine
+    container_name: database
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: admin
+      POSTGRES_DB: api-laravel
+    ports:
+      - '5432:5432'
+
+  api-crud-laravel:
+    working_dir: /app
+    image: webdevops/php-apache:8.1
+    container_name: api-crud-laravel
+    build:
+      context: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ".:/app"
+    restart: always
+    depends_on:
+      - db
+    environment:
+      ANBIENT: 2
+      PHP_DATE_TIMEZONE: America/Maceio
